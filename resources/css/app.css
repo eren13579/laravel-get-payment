@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import 'select2/dist/css/select2.min.css';
+
 @plugin "@tailwindcss/forms";
 
 

@@ -1,23 +1,18 @@
 <?php
 
 use App\Http\Controllers\GetPaymentController;
-use App\Models\PaysAfricain;
+use App\Http\Controllers\PaymentStatus;
+use App\Http\Controllers\TransfertPaymentController;
 use Illuminate\Support\Facades\Route;
 
-// Route::post('depot', [GetPaymentController::class, 'depot'])->name('get-payment.depot');
+Route::middleware(['auth'])->group(function () {
+});
 
-Route::get('/', [GetPaymentController::class, 'index']);
+Route::post('/depot', [GetPaymentController::class, 'sendDepot'])->name('get-payment.depot');
 
-Route::get('/get-country-data/{id}', function(string $id) {
-    $countries = PaysAfricain::find($id);
+Route::post('/retrait', [TransfertPaymentController::class, 'transfertPayment'])->name('transfert-payment.retrait');
 
-    if (!$countries) {
-        return response()->json(['error' => 'Country not found'], 404);
-    }
+Route::get('/depot/verify', [PaymentStatus::class, 'handleReturnUrl'])->name('get-payment.success');
 
-    return response()->json([
-        'indicatif' => $countries->indicatif,
-        'currency_id' => $countries->devise_id,
-    ]);
-    
-})->name('get.country.data');
+Route::get('/', [GetPaymentController::class, 'index'])->name('transaction-payment');
+
